@@ -1,0 +1,72 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    tools:context=".PlayerFragment">
+
+    <Button
+        android:id="@+id/buttonPrev"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="0dp"
+        android:layout_height="80px"
+        android:layout_weight="1"
+        android:textSize="10pt"
+        android:padding="5px"
+        android:text="&lt;&lt;"/>
+
+    <Button
+        android:id="@+id/buttonMinus5"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="0dp"
+        android:layout_height="80px"
+        android:layout_weight="1"
+        android:textSize="10pt"
+        android:padding="5px"
+        android:text="-10"/>
+
+    <Button
+        android:id="@+id/buttonPlay"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="0dp"
+        android:layout_height="80px"
+        android:layout_weight="1"
+        android:textSize="10pt"
+        android:padding="5px"
+        android:text="▶"/>
+
+    <Button
+        android:id="@+id/buttonPlus5"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="0dp"
+        android:layout_height="80px"
+        android:layout_weight="1"
+        android:textSize="10pt"
+        android:padding="5px"
+        android:text="+10"/>
+
+    <Button
+        android:id="@+id/buttonNext"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="0dp"
+        android:layout_height="80px"
+        android:layout_weight="1"
+        android:textSize="10pt"
+        android:padding="5px"
+        android:text="&gt;&gt;"/>
+
+    <Button
+        android:id="@+id/buttonText"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="0dp"
+        android:layout_height="80px"
+        android:layout_weight="1"
+        android:textSize="10pt"
+        android:padding="5px"
+        android:text="Text"/>
+</LinearLayout>
