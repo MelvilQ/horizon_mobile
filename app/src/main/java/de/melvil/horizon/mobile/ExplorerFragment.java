@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ public class ExplorerFragment extends Fragment {
 
     private HorizonActivity parent;
 
-    private String langPath;
+    private String path;
 
     private List<HorizonItem> folderItems;
     private int currentFolderIndex = -1;
@@ -52,17 +53,18 @@ public class ExplorerFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity activity = (Activity) context;
         parent = (HorizonActivity) activity;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        String lang = "fr";
-        langPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Horizon/" + lang;
-        listFolders(langPath);
+        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                .getAbsolutePath() + "/Horizon";
+        listFolders(path);
     }
 
     public List<HorizonItem> getFolders(String langPath){
@@ -84,8 +86,8 @@ public class ExplorerFragment extends Fragment {
         return items;
     }
 
-    public List<HorizonItem> getFiles(String folder){
-        File folderDir = new File(langPath + "/" + folder);
+    public List<HorizonItem> getFiles(String path){
+        File folderDir = new File(path);
         Map<String, HorizonItem> items = new LinkedHashMap<>();
         File[] files = folderDir.listFiles();
         Arrays.sort(files);
@@ -120,14 +122,15 @@ public class ExplorerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
                 HorizonItem item = (HorizonItem) adapter.getItemAtPosition(position);
-                listFiles(item.getName());
+                String folderPath = path + "/" + item.getName();
+                listFiles(folderPath);
                 currentFolderIndex = position;
             }
         });
     }
 
-    public void listFiles(String folder) {
-        List<HorizonItem> itemsList = getFiles(folder);
+    public void listFiles(String filePath) {
+        List<HorizonItem> itemsList = getFiles(filePath);
         itemsList.add(0, new HorizonItem("← Back", "", false, false));
         ListView listView = (ListView) getActivity().findViewById(R.id.listView);
         explorerAdapter = new ExplorerAdapter(
@@ -138,14 +141,14 @@ public class ExplorerFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
                 HorizonItem item = (HorizonItem) adapter.getItemAtPosition(position);
                 if (item.getName().equals("← Back")) {
-                    listFolders(langPath);
+                    listFolders(path);
                     return;
                 }
                 parent.notifySelectionChange(item);
                 selectedFileIndex = position - 1;
                 selectedFolderIndex = currentFolderIndex;
-                fileItemsOfSelectedFolder = getFiles(
-                        folderItems.get(selectedFolderIndex).getName());
+                String folderPath = path + "/" + folderItems.get(selectedFolderIndex).getName();
+                fileItemsOfSelectedFolder = getFiles(folderPath);
                 explorerAdapter.notifyDataSetChanged();
             }
         });
@@ -158,7 +161,8 @@ public class ExplorerFragment extends Fragment {
             if(selectedFolderIndex >= folderItems.size()){
                 selectedFolderIndex = 0;
             }
-            fileItemsOfSelectedFolder = getFiles(folderItems.get(selectedFolderIndex).getName());
+            String folderPath = path + "/" + folderItems.get(selectedFolderIndex).getName();
+            fileItemsOfSelectedFolder = getFiles(folderPath);
             selectedFileIndex = 0;
         }
         if(audioOnly && !fileItemsOfSelectedFolder.get(selectedFileIndex).hasAudio())
@@ -174,7 +178,8 @@ public class ExplorerFragment extends Fragment {
             if(selectedFolderIndex < 0){
                 selectedFolderIndex = folderItems.size() - 1;
             }
-            fileItemsOfSelectedFolder = getFiles(folderItems.get(selectedFolderIndex).getName());
+            String folderPath = path + "/" + folderItems.get(selectedFolderIndex).getName();
+            fileItemsOfSelectedFolder = getFiles(folderPath);
             selectedFileIndex = fileItemsOfSelectedFolder.size() - 1;
         }
         if(audioOnly && !fileItemsOfSelectedFolder.get(selectedFileIndex).hasAudio())
@@ -185,12 +190,13 @@ public class ExplorerFragment extends Fragment {
 
     private class ExplorerAdapter extends ArrayAdapter<HorizonItem> {
 
-        public ExplorerAdapter(Context context, int resource, List<HorizonItem> items) {
+        ExplorerAdapter(Context context, int resource, List<HorizonItem> items) {
             super(context, resource, items);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View view, ViewGroup parent) {
+        public View getView(int position, View view, @NonNull ViewGroup parent) {
             if (view == null) {
                 view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_explorer, null);
             }

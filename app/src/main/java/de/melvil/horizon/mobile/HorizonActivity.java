@@ -8,9 +8,9 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
-public class HorizonActivity extends ActionBarActivity {
+public class HorizonActivity extends AppCompatActivity {
 
     private PlayerFragment playerFragment;
     private ExplorerFragment explorerFragment;
@@ -22,7 +22,6 @@ public class HorizonActivity extends ActionBarActivity {
     private boolean playing;
 
     private boolean showText = false;
-    private String lang = "fr";
     private HorizonItem currentItem;
 
     @Override
@@ -63,18 +62,12 @@ public class HorizonActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
-    public void exitApp(){
-        stopService(playIntent);
-        audioService = null;
-        System.exit(0);
-    }
-
     public void notifySelectionChange(HorizonItem item) {
         currentItem = item;
         if (item != null) {
             if (item.hasText()) {
                 // load new text into reader
-                readerFragment.loadText(currentItem.getPath() + "/" + currentItem.getName(), lang);
+                readerFragment.loadText(currentItem.getPath() + "/" + currentItem.getName());
             } else {
                 showText = true;
                 notifyShowHideText();
