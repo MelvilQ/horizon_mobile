@@ -99,16 +99,15 @@ public class ExplorerFragment extends Fragment {
                     items.get(name).hasAudio(true);
                 else
                     items.put(name, new HorizonItem(name, folderDir.getAbsolutePath(), true, false));
-            } else if (name.endsWith(".txt")) {
-                name = name.replace(".txt", "");
+            } else if (name.endsWith(".html")) {
+                name = name.replace(".html", "");
                 if (items.containsKey(name))
                     items.get(name).hasText(true);
                 else
                     items.put(name, new HorizonItem(name, folderDir.getAbsolutePath(), false, true));
             }
         }
-        List<HorizonItem> itemsList = new ArrayList<>(items.values());
-        return itemsList;
+        return new ArrayList<>(items.values());
     }
 
     public void listFolders(String langPath) {

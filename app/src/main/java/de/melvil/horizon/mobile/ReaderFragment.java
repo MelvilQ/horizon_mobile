@@ -1,22 +1,20 @@
 package de.melvil.horizon.mobile;
 
-import android.support.v4.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 public class ReaderFragment extends Fragment {
 
@@ -42,24 +40,31 @@ public class ReaderFragment extends Fragment {
 
     public void loadText(String path) {
         try {
-            StringBuilder html = new StringBuilder(2097152);
-            String textHtml = FileUtils.readFileToString(new File(path + ".txt"));
-            // put it into a html5 document with css and js
-            html.append("<!DOCTYPE html><html><head><meta charset=\"UTF-8\">");
-            html.append("<link href=\"reader.css\" type=\"text/css\" rel=\"stylesheet\" />");
-            html.append("</head><body>");
-            html.append(textHtml);
-            html.append("</body></html>");
-            // put html into webview
+            String html = FileUtils.readFileToString(new File(path + ".html"));
             WebView webView = (WebView) getView().findViewById(R.id.webView);
             webView.setWebViewClient(new WebViewClient());
             webView.getSettings().setSupportZoom(true);
-            String highlightedHtml = html.toString();
-            webView.loadDataWithBaseURL("file:///android_asset/", highlightedHtml, "text/html",
+            webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html",
                     "UTF-8", null);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.addJavascriptInterface(this, "Android");
         } catch(Exception e){
             Toast.makeText(getView().getContext(), "Error loading text...", Toast.LENGTH_SHORT)
                     .show();
         }
+    }
+
+    @JavascriptInterface
+    public void showMeaning(String meaning) {
+        if (meaning == null || meaning.trim().equals(""))
+            return;
+
+        Toast t = Toast.makeText(getActivity().getApplicationContext(), meaning.trim(),
+                Toast.LENGTH_LONG);
+        ViewGroup group = (ViewGroup) t.getView();
+        TextView messageTextView = (TextView) group.getChildAt(0);
+        messageTextView.setTextSize(21);
+        t.getView().setBackgroundColor(Color.rgb(200, 220, 230));
+        t.show();
     }
 }
