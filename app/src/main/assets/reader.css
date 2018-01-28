@@ -25,3 +25,33 @@ span {
 .white {
     background-color: white;
 }
+
+#dict {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(200, 220, 230);
+  z-index: 17;
+  -webkit-overflow-scrolling: touch;
+}
+
+#close {
+  color: black;
+  font-family: sans-serif;
+  font-size: 20pt;
+  text-decoration: none;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+iframe {
+  margin: 0 auto;
+  width: 100%;
+  height: 90%;
+  visibility: hidden;
+}
